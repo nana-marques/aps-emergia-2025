@@ -2,12 +2,16 @@
 @media only screen and (max-width: 600px) {
     #map-canvas{
         height: 350px; 
-        width: 350px;
+        width: 330px;
         margin-left: 20px;
     }
     
     #img-logo{
         height: 40px;
+    }
+
+    #imagem{
+        width: 350px;
     }
 }
 
@@ -22,18 +26,26 @@
     #img-logo{
         height: 40px;
     }
+
+    #imagem{
+        width: 350px;
+    }
 }
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
     #map-canvas{
         height: 400px; 
-        width: 450px;
+        width: 300px;
         margin-left: 20px;
     }
     
     #img-logo{
         height: 40px;
+    }
+
+    #imagem{
+        width: 400px;
     }
 }
 
@@ -41,7 +53,7 @@
 @media only screen and (min-width: 992px) {
     #map-canvas{
         height: 500px; 
-        width: 500px;
+        width: 450px;
     }
 
     #img-logo{
