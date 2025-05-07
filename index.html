@@ -61,10 +61,10 @@
   <div class="row">
     <div class="col-md-6">
       <p>Total de ONGs cadastradas no sistema.</p>    
-      <form class="form-inline my-2 my-lg-0" id="myForm" name="myForm">
+
         <input id="pac-input" class="controls form-control mr-sm-2 col-md-10 col-sm-3" type="search" placeholder="Digite aqui o endereço" aria-label="Search">
         <button class="btn btn-outline-success my-1 my-sm-0" type="submit"><i class="fa fa-search" aria-hidden="true" style="color:#2c8748"></i></button>
-      </form>
+
       <div class="col-md-12 mt-3 pt-3 pb-4" id="ong-01">
         <p class="lead">Recicleiros</p>
         <p><b style="color:#2c8748">Endereço: </b>Rua General Sócrates, 418 - Penha de França, São Paulo, SP. CEP 03632-040</p>
@@ -104,125 +104,7 @@
 
 </body>
 <!-- <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDuszLFzRpT4ai0R0NlZDOJy4w9NnYwwYo&callback=myMap"></script> -->
-<script type="text/javascript">
-  var locations = [
-    ['Recicleiros', -23.5293633, -46.5492213],
-    ['Instituto Reciclar', -23.5421504, -46.7526569],
-    ['ANCAT (Associação Nacional dos Catadores)', -23.54399, -46.63995],
-    ['CEMPRE (Compromisso Empresarial para Reciclagem)', -23.58141, -46.67447],
-    ['ABRECON (Associação Brasileira para Reciclagem de RCD)', -23.52836, -46.67015]
-  ];
-  
-  var map = new google.maps.Map(document.getElementById('map-canvas'), {
-    zoom: 12,
-              center: new google.maps.LatLng(-23.550104,-46.633953),
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-  });
-  
-  var infowindow = new google.maps.InfoWindow();
+<script src="./app.js"></script>
 
-  var marker, i;
-  const icon = {
-          url: "./img/pin2.png", // url
-          scaledSize: new google.maps.Size(30, 40),
-      };
-
-  for (i = 0; i < locations.length; i++) {  
-    marker = new google.maps.Marker({
-      position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-      title: locations[i][0],
-      url: '/',
-      map: map
-    });
-    marker.setIcon(icon);
-    marker.setMap(map);
-    google.maps.event.addListener(marker, 'click', (function(marker, i) {
-      return function() {
-        infowindow.setContent(locations[i][0]);
-        infowindow.open(map, marker);
-      }
-    })(marker, i));
-  }
-  var searchBox = new google.maps.places.SearchBox(document.getElementById('pac-input'));
-   map.controls[google.maps.ControlPosition.TOP_CENTER].push(document.getElementById('pac-input'));
-   google.maps.event.addListener(searchBox, 'places_changed', function() {
-     searchBox.set('map', null);
-
-
-     var places = searchBox.getPlaces();
-
-     var bounds = new google.maps.LatLngBounds();
-     var i, place;
-     for (i = 0; place = places[i]; i++) {
-       (function(place) {
-         var marker = new google.maps.Marker({
-
-           position: place.geometry.location
-         });
-         marker.bindTo('map', searchBox, 'map');
-         google.maps.event.addListener(marker, 'map_changed', function() {
-           if (!this.getMap()) {
-             this.unbindAll();
-           }
-         });
-         bounds.extend(place.geometry.location);
-
-
-       }(place));
-
-     }
-     map.fitBounds(bounds);
-     searchBox.set('map', map);
-     map.setZoom(Math.min(map.getZoom(),12));
-
-   });
- 
- google.maps.event.addDomListener(window, 'load', init);
-
- //evento para destacar a ong na listagem, ao clicar no mapa
- google.maps.event.addListener(marker, 'click', function() {window.location.href = marker.url;});
-</script>
-<!-- <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script> -->
-
-<!-- <script>
-  //praça da se lat: -23.550104 long: -46.633953
-
-  var map;
-
-  let json = '{"ongs":{"1":{"id": 1,"nome": "ONG Exemplo 1","endereco": "R. Demétrio Ribeiro, 435 - Sala AP251 - Cidade Mãe do Céu, São Paulo - SP, 03332-000","lat": -23.53645789877539,"long":-46.575282367951985},"2":{"id": 2,"nome": "ONG Exemplo 2","endereco": "Rua Dr. Gabriel de Resende, 122 - Vila Invernada, São Paulo - SP, 03350-005","lat": -23.558489281742734,"long": -46.56223610426616}}}'
-
-  function initialize() {
-  var mapOptions = {
-              zoom: 12,
-              center: new google.maps.LatLng(-23.550104,-46.633953),
-              mapTypeId: google.maps.MapTypeId.ROADMAP
-              };
-
-      map = new google.maps.Map(document.getElementById('map-canvas'),mapOptions);
-
-          //Add 1st marker
-      var Latlng_0 = new google.maps.LatLng(-23.558489281742734,-46.56223610426616);
-      const icon = {
-          url: "./img/pin2.png", // url
-          scaledSize: new google.maps.Size(30, 40), // scaled size
-      };
-      var marker_0 = new google.maps.Marker({
-          position: Latlng_0,
-                    title:"Testando"});
-
-          marker_0.setIcon(icon);
-          marker_0.setMap(map);
-      //Add 2nd marker
-      var Latlng_1 = new google.maps.LatLng(-23.53645789877539,-46.575282367951985);
-      var marker_1 = new google.maps.Marker({
-          position: Latlng_1,
-          title:"1"});
-          marker_1.setIcon(icon);
-          marker_1.setMap(map);
-
-
-      }
-  initialize();
-</script> -->
     
 </html>
