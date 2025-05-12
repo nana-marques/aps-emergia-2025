@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Jogo de Reciclagem</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.3/dist/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      /* padding: 20px; */
+    }
+
+    .container {
+      display: flex;
+	  flex-direction: column;
+      align-items: center;
+      gap: 50px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: row;
+      gap: 40px;
+    }
+
+    .item {
+      padding: 10px;
+      border: 2px solid #ccc;
+      border-radius: 10px;
+      cursor: pointer;
+      background-color: #f9f9f9;
+    }
+
+    .item.selected {
+      background-color: #d0f0d0;
+      border-color: green;
+
+    }
+
+    .item.correct {
+      background-color: #a8f3a8;
+      pointer-events: none;
+    }
+
+    .item.wrong {
+      background-color: #f3a8a8;
+	  
+    }
+	
+	#reiniciar {
+		margin-top: 50px; 
+		padding: 10px 20px;
+		font-size: 16px;
+		cursor: pointer;
+	}
+
+    #score {
+      margin-top: 30px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <nav style="background-color: #2c8748;" class="navbar navbar-expand-lg navbar-dark navbar-fixed-top">
+    <a class="navbar-brand" href="#"><img src="./img/pin2.png" alt="Pin" id="img-logo"></a>
+    <a href="#" class="navbar-brand">ONGs e Reciclagem</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.html#emergia">Emergia</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="index.html#ongs">Mapa de ONGs</a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Jogo</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  <h1 class="mt-5">Jogo: Recicle Certo!</h1>
+  <p>Clique em um lixo e depois na lixeira correspondente.</p>
+
+  <div class="container">
+    <div class="column" id="lixos"></div>
+    <div class="column" id="lixeiras">
+      <div class="item" data-type="plastico"><img src="img/LVermelha.png" alt="Lixeira Vermelha"></div>
+      <div class="item" data-type="papel"><img src="img/LAzul.png" alt="Lixeira Azul"></div>
+      <div class="item" data-type="vidro"><img src="img/LVerde.png" alt="Lixeira Verde"></div>
+      <div class="item" data-type="metal"><img src="img/LAmarela.png" alt="Lixeira Amarela"></div>
+	  <div class="item" data-type="orgânicos"><img src="img/LMarrom.png" alt="Lixeira Marrom"></div>
+    </div>
+  </div>
+  <button id= "reiniciar" >Reiniciar</button>
+
+  <div id="score"></div>
+
+  <script>
+    let selectedLixo = null;
+    let acertos = 0;
+	let lixeirasUsadas = new Set();
+	
+	const tiposDeLixo = {
+		papel: [
+			{ tipo: 'papel', img: "img/LJornal.png", alt: 'Jornal' },
+			{ tipo: 'papel', img: "img/LLeite.png", alt: 'Caixa de leite' },
+			{ tipo: 'papel', img: "img/LPapel.png", alt: 'Papel amassado' }
+		],
+		plastico: [
+			{ tipo: 'plastico', img: 'img/LSacola.png', alt: 'Sacola plástica' },
+			{ tipo: 'plastico', img: 'img/LGarrafa.png', alt: 'Garrafa PET' }
+		],
+		metal: [
+			{ tipo: 'metal', img: 'img/LSpray.png', alt: 'Lata Spray' },
+			{ tipo: 'metal', img: 'img/LLata.png', alt: 'Lata de alumínio' },
+			{ tipo: 'metal', img: 'img/LLata2.png', alt: 'Lata de alumínio' }
+		],
+		vidro: [
+			{ tipo: 'vidro', img: 'img/LGVidro.png', alt: 'Garrafa de vidro' },
+			{ tipo: 'vidro', img: 'img/LPote.png', alt: 'Pote de vidro' }
+		],
+		orgânicos: [
+			{ tipo: 'orgânicos', img: 'img/LFrango.png', alt: 'Coxa de frango' },
+			{ tipo: 'orgânicos', img: 'img/LBanana.png', alt: 'Casca de banana' },
+			{ tipo: 'orgânicos', img: 'img/LPizza.png', alt: 'Pedaço de pizza' }
+		]
+	};
+
+	function embaralhar(array) {
+		for (let i = array.length - 1; i > 0; i--) {
+			const j = Math.floor(Math.random() * (i + 1));
+			[array[i], array[j]] = [array[j], array[i]];
+		}
+		return array;
+	}
+
+	function gerarLixos() {
+		const lixosContainer = document.getElementById('lixos');
+		lixosContainer.innerHTML = '';
+
+		const lixosSelecionados = [];
+
+		for (const tipo in tiposDeLixo) {
+		const itens = embaralhar(tiposDeLixo[tipo]);
+		lixosSelecionados.push(itens[0]); // pega 1 lixo aleatório de cada tipo
+	}
+
+	embaralhar(lixosSelecionados).forEach(lixo => {
+		const div = document.createElement('div');
+			div.classList.add('item');
+			div.setAttribute('data-type', lixo.tipo);
+
+		const img = document.createElement('img');
+		img.src = lixo.img;
+		img.alt = lixo.alt;
+		img.style.width = '80px';
+		img.style.height = '100px';
+
+		div.appendChild(img);
+
+		div.addEventListener('click', () => {
+		document.querySelectorAll('#lixos .item').forEach(l => l.classList.remove('selected'));
+		div.classList.add('selected');
+		selectedLixo = div;
+		});
+
+		lixosContainer.appendChild(div);
+		});
+	}
+
+    const lixeiras = document.querySelectorAll('#lixeiras .item');
+    const scoreDisplay = document.getElementById('score');
+
+    lixeiras.forEach(lixeira => {
+      lixeira.addEventListener('click', () => {
+        if (!selectedLixo || selectedLixo.classList.contains('correct')) return;
+
+        const tipoLixo = selectedLixo.getAttribute('data-type');
+        const tipoLixeira = lixeira.getAttribute('data-type');
+		
+		if (lixeirasUsadas.has(tipoLixeira)) return;
+
+        if (tipoLixo === tipoLixeira) {
+          selectedLixo.classList.add('correct');
+          lixeira.classList.add('correct');
+		  lixeirasUsadas.add(tipoLixeira);
+          acertos++;
+        } else {
+          selectedLixo.classList.add('wrong');
+		  lixeira.classList.add('wrong');
+        }
+
+        selectedLixo.classList.remove('selected');
+        selectedLixo = null;
+
+        if (acertos === Object.keys(tiposDeLixo).length) {
+          scoreDisplay.textContent = "Parabéns! Você acertou todos!";
+        }
+      });
+    });
+	
+document.getElementById('reiniciar').addEventListener('click', () => {
+	acertos=0;
+	selectedLixo = null;
+	scoreDisplay.textContent= '';
+	lixeirasUsadas.clear();
+		
+	lixeiras.forEach(lixeira => {
+	 lixeira.classList.remove('correct', 'wrong');				
+	});
+	gerarLixos();
+});
+gerarLixos();
+	
+  </script>
+</body>
+</html>
